@@ -1,0 +1,27 @@
+src/
+├── components/
+│   ├── Navbar.jsx
+│   ├── Recomended.jsx
+│   ├── User/
+│   │   ├── Menswear/
+│   │   │   ├── Shirts.jsx
+│   │   │   ├── TShirts.jsx
+│   │   │   ├── Jeans.jsx
+│   │   │   ├── Jackets.jsx
+│   │   ├── Womenswear/
+│   │   │   ├── Dresses.jsx
+│   │   │   ├── Tops.jsx
+│   │   │   ├── Skirts.jsx
+│   │   │   ├── Sarees.jsx
+│   │   ├── Kidswear/
+│   │   │   ├── TShirts.jsx
+│   │   │   ├── Shorts.jsx
+│   │   │   ├── Dresses.jsx
+│   │   │   ├── Nightwear.jsx
+│   │   ├── Accessories/
+│   │   │   ├── Bags.jsx
+│   │   │   ├── Shoes.jsx
+│   │   │   ├── Watches.jsx
+│   │   │   ├── Jewelry.jsx
+
+

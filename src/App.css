@@ -1,0 +1,16 @@
+@keyframes color-change {
+    0% {
+      color: black;
+    }
+    50% {
+      color: #1e40af; /* blue-900 */
+    }
+    100% {
+      color: black;
+    }
+  }
+  
+  .animate-color-change {
+    animation: color-change 2s infinite ease-in-out;
+  }
+  
