@@ -53,7 +53,7 @@ const SignupForm = () => {
               box-shadow: 0 0 20px 5px rgba(59, 130, 246, 1);
             }
           }
-  `;
+  `; 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">

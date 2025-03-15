@@ -16,7 +16,7 @@ const ContactForm = () => {
             <strong>Phone:</strong> <a href="tel:00923055865381" className="text-blue-400">00923055865381</a>
           </p>
           <p>
-            <strong>Email:</strong> <a href="use@gmail.com" className="text-blue-400">mlkmoaz01@gmail.com</a>
+            <strong>Email:</strong> <a href="mailto:hello@ecom.com" className="text-blue-400">mlkmoaz01@gmail.com</a>
           </p>
         </div>
       </div>
