@@ -46,7 +46,7 @@ const HeroSection = () => {
         </div>
         <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
           <img
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" // Replace with a relevant image URL for clothing or accessories
+            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" 
             alt="Clothing and Accessories"
           />
         </div>

@@ -84,7 +84,7 @@ const LoginForm = () => {
           <p className="text-sm font-light text-gray-500">
             Don't have an account?{" "}
             <a
-              href="#"
+              href=""  
               onClick={() => navigate("/signup")}
               className="font-medium text-blue-700 hover:underline"
             >
