@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import MinePic from '../../assets/TeamLeader.jpg';
+import MinePic from "../../assets/TeamLeader.jpg";
 
 const UserProfileManagement = () => {
     const [profile, setProfile] = useState({
@@ -18,6 +18,7 @@ const UserProfileManagement = () => {
 
     const [editField, setEditField] = useState(null);
     const [tempData, setTempData] = useState({ ...profile });
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const handleEdit = (field) => setEditField(field);
     const handleInputChange = (e) => {
@@ -30,9 +31,29 @@ const UserProfileManagement = () => {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex flex-col md:flex-row relative">
+            {/* Sidebar Overlay (Click anywhere to close) */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                ></div>
+            )}
+
+            {/* Sidebar Toggle Button for Mobile */}
+            <button
+                className="md:hidden bg-blue-900 text-white py-2 px-4 m-2 rounded z-50"
+                onClick={() => setSidebarOpen(true)}
+            >
+                ☰ Menu
+            </button>
+
             {/* Sidebar */}
-            <aside className="bg-white w-1/4 p-4 shadow-lg flex-shrink-0">
+            <aside
+                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg fixed md:relative h-full z-50 transform transition-transform duration-300 ${
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                } md:translate-x-0`}
+            >
                 <div className="flex items-center space-x-4 border-b pb-4 mb-4">
                     <img src={MinePic} alt="User Avatar" className="w-12 h-12 rounded-full" />
                     <div>
@@ -50,12 +71,12 @@ const UserProfileManagement = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-4">
-                <h1 className="text-2xl font-semibold mb-4">Account Details</h1>
+            <main className="flex-1 p-4 transition-all duration-300">
+                <h1 className="text-2xl font-semibold mb-4 text-center md:text-left">Account Details</h1>
 
                 {/* Profile Card */}
-                <div className="bg-white p-4 rounded-lg shadow-lg border hover:border-blue-900 mb-4">
-                    <h2 className="text-lg font-semibold mb-4 text-center">Profile</h2>
+                <div className="bg-white p-4 rounded-lg shadow-lg border hover:border-blue-900 mb-4 text-center">
+                    <h2 className="text-lg font-semibold mb-4">Profile</h2>
                     {editField === "profile" ? (
                         <div>
                             <input type="text" name="name" value={tempData.name} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
@@ -66,7 +87,7 @@ const UserProfileManagement = () => {
                             <button className="mt-2 py-1 px-4 bg-blue-900 text-white rounded hover:bg-blue-800" onClick={handleUpdate}>Update</button>
                         </div>
                     ) : (
-                        <div className="text-center">
+                        <div>
                             <img src={MinePic} alt="Profile Avatar" className="w-24 h-24 rounded-full mx-auto mb-4" />
                             <p className="mb-2">Name: {profile.name}</p>
                             <p className="mb-2">Email: {profile.email}</p>
@@ -77,7 +98,7 @@ const UserProfileManagement = () => {
                 </div>
 
                 {/* Address Cards */}
-                <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {/* Shipping Address */}
                     <div className="bg-white p-4 rounded-lg shadow border hover:border-blue-800">
                         <h2 className="text-lg font-semibold mb-2">Shipping Address</h2>
@@ -97,48 +118,10 @@ const UserProfileManagement = () => {
                             </div>
                         )}
                     </div>
-
-                    {/* Billing Address */}
-                    <div className="bg-white p-4 rounded-lg shadow border hover:border-blue-800">
-                        <h2 className="text-lg font-semibold mb-2">Billing Address</h2>
-                        {editField === "bill" ? (
-                            <div>
-                                <input type="text" name="bill" value={tempData.bill} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <input type="text" name="billStreet" value={tempData.billStreet} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <input type="text" name="billCity" value={tempData.billCity} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <button className="mt-2 py-1 px-4 bg-blue-900 text-white rounded hover:bg-blue-800" onClick={handleUpdate}>Update</button>
-                            </div>
-                        ) : (
-                            <div>
-                                <p className="mb-2">Bill: {profile.bill}</p>
-                                <p className="mb-2">Street: {profile.billStreet}</p>
-                                <p className="mb-2">City: {profile.billCity}</p>
-                                <button className="mt-2 py-1 px-4 bg-blue-900 text-white rounded hover:bg-blue-800" onClick={() => handleEdit("bill")}>Edit</button>
-                            </div>
-                        )}
-                    </div>
-                    <div className="bg-white p-4 rounded-lg shadow border hover:border-blue-800">
-                        <h2 className="text-lg font-semibold mb-2">Billing Address</h2>
-                        {editField === "bill" ? (
-                            <div>
-                                <input type="text" name="bill" value={tempData.bill} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <input type="text" name="billStreet" value={tempData.billStreet} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <input type="text" name="billCity" value={tempData.billCity} onChange={handleInputChange} className="block w-full mb-2 p-2 border rounded" />
-                                <button className="mt-2 py-1 px-4 bg-blue-900 text-white rounded hover:bg-blue-800" onClick={handleUpdate}>Update</button>
-                            </div>
-                        ) : (
-                            <div>
-                                <p className="mb-2">Bill: {profile.bill}</p>
-                                <p className="mb-2">Street: {profile.billStreet}</p>
-                                <p className="mb-2">City: {profile.billCity}</p>
-                                <button className="mt-2 py-1 px-4 bg-blue-900 text-white rounded hover:bg-blue-800" onClick={() => handleEdit("bill")}>Edit</button>
-                            </div>
-                        )}
-                    </div>
                 </div>
             </main>
         </div>
     );
 };
 
-export default UserProfileManagement ;
+export default UserProfileManagement;

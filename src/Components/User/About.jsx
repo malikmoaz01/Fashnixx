@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AboutPic from '../../assets/About.jpg';
-import TeamLeader from '../../assets/TeamLeader.jpg';  // Corrected image import
-import Footer from './Footer' 
+import TeamLeader from '../../assets/TeamLeader.jpg';
+
 const About = () => {
   const [clients, setClients] = useState(0);
   const [projects, setProjects] = useState(0);
@@ -44,11 +44,11 @@ const About = () => {
         <div>
           <h2 className="text-3xl font-extrabold text-gray-800 mb-4">Our Story</h2>
           <p className="text-lg text-gray-600">
-            Welcome to <strong>Ecom</strong>, an e-commerce clothing & accessories brand born from a simple idea: to provide stylish, comfortable, and high-quality clothing and accessories for everyone. Our journey started with a passion for fashion and a commitment to delivering the latest trends to your doorstep. We aim to offer a diverse range of products that cater to all tastes and preferences. Our mission is simple: to make fashion accessible and enjoyable for all.
+            Welcome to <strong>Fashnix</strong>, an e-commerce clothing & accessories brand born from a simple idea: to provide stylish, comfortable, and high-quality clothing and accessories for everyone. Our journey started with a passion for fashion and a commitment to delivering the latest trends to your doorstep. We aim to offer a diverse range of products that cater to all tastes and preferences. Our mission is simple: to make fashion accessible and enjoyable for all.
           </p>
         </div>
       </div>
-      
+
 
       {/* Our Achievement Page */}
       <div className="py-12  rounded-md">
@@ -77,21 +77,21 @@ const About = () => {
 
       {/* Team Leader Section */}
       <div className="bg-blue-50 p-8 rounded-lg shadow-lg border-l-4 border-blue-800 my-16">
-        <div className="flex items-center gap-10">
+        <div className="flex flex-col md:flex-row items-center gap-10">
           {/* Team Leader Image */}
           <div>
             <img
               src={TeamLeader}
               alt="Team Leader"
-              className="w-48 h-48 rounded-lg shadow-lg object-cover"
+              className="w-32 h-32 md:w-48 md:h-48 rounded-lg shadow-lg object-cover"
             />
           </div>
           {/* Team Leader Text */}
-          <div>
-            <h3 className="text-3xl font-bold text-gray-800">Malik Moaz || Team Lead</h3>
-            <p className="text-xl text-gray-600 mb-4">Full Stack Developer</p>
+          <div className="text-center md:text-left">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-800">Malik Moaz || Team Lead</h3>
+            <p className="text-lg md:text-xl text-gray-600 mb-4">Full Stack Developer</p>
             <p className="text-gray-500">
-              Malik Moaz is the visionary behind Ecom. He leads the company with a passion for fashion, ensuring that our products meet the highest standards and customer satisfaction is always at the forefront.
+              Malik Moaz is the visionary behind Fashnix. He leads the company with a passion for fashion, ensuring that our products meet the highest standards and customer satisfaction is always at the forefront.
             </p>
           </div>
         </div>
@@ -120,9 +120,9 @@ const About = () => {
       </div>
 
       {/* Metrics Section */}
-      
+
     </div>
-    
+
   );
 };
 

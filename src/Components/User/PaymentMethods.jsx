@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import MinePic from '../../assets/TeamLeader.jpg';
-import { FaMobileAlt, FaPaypal, FaEdit, FaTrashAlt } from 'react-icons/fa'; // Assuming you're using React Icons
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 const PaymentMethod = () => {
     const [paymentMethods, setPaymentMethods] = useState([
@@ -12,6 +12,7 @@ const PaymentMethod = () => {
     
     const [editField, setEditField] = useState(null);
     const [tempData, setTempData] = useState({ name: "", phone: "", malik: "", status: "" });
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const handleEdit = (id) => {
         const method = paymentMethods.find(m => m.id === id);
@@ -36,9 +37,19 @@ const PaymentMethod = () => {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex flex-col md:flex-row relative">
+            {/* Sidebar Toggle Button for Mobile */}
+            <button
+                className="md:hidden bg-blue-900 text-white py-2 px-4 m-2 rounded"
+                onClick={() => setSidebarOpen(true)}
+            >
+                ☰ Menu
+            </button>
+
             {/* Sidebar */}
-            <aside className="bg-white w-1/4 p-4 shadow-lg flex-shrink-0">
+            <aside
+                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform fixed md:relative h-full z-50`}
+            >
                 <div className="flex items-center space-x-4 border-b pb-4 mb-4">
                     <img src={MinePic} alt="User Avatar" className="w-12 h-12 rounded-full" />
                     <div>
@@ -48,16 +59,24 @@ const PaymentMethod = () => {
                 <nav>
                     <ul className="space-y-2">
                         <li><Link to="/account" className="block py-2 px-4 rounded hover:bg-gray-200">Manage Account</Link></li>
-                        <li><Link to="/order-history" className="block py-2 px-4 rounded hover:bg-gray-200 ">My Order History</Link></li>
+                        <li><Link to="/order-history" className="block py-2 px-4 rounded hover:bg-gray-200">My Order History</Link></li>
                         <li><a href="/payment-methods" className="block py-2 px-4 rounded hover:bg-gray-200">Payment Methods</a></li>
                         <li><a href="/" className="block py-2 px-4 rounded hover:bg-gray-200 text-red-600">Log Out</a></li>
                     </ul>
                 </nav>
             </aside>
 
+            {/* Overlay to close sidebar on mobile */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black opacity-50 md:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                ></div>
+            )}
+
             {/* Main Content */}
             <main className="flex-1 p-4">
-                <h1 className="text-2xl font-semibold mb-4">Payment Methods</h1>
+                <h1 className="text-2xl font-semibold mb-4 text-center md:text-left">Payment Methods</h1>
 
                 {/* Payment Methods Section */}
                 <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3">
@@ -133,4 +152,3 @@ const PaymentMethod = () => {
 };
 
 export default PaymentMethod;
-  
