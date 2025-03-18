@@ -3,57 +3,80 @@ import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
   const [profileImage, setProfileImage] = useState(null);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setProfileImage(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setPasswordError(""); // Reset error on typing
-  };
+  const handleChange = (e) => {
+    setUserData({ ...userData, [e.target.id]: e.target.value });
 
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    if (e.target.value !== password) {
-      setPasswordError("Passwords do not match!");
-    } else {
-      setPasswordError("");
+    if (e.target.id === "confirmPassword") {
+      setPasswordError(
+        e.target.value !== userData.password ? "Passwords do not match!" : ""
+      );
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+
+    if (userData.password !== userData.confirmPassword) {
       setPasswordError("Passwords do not match!");
       return;
     }
-    alert("Account created successfully!");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...userData, profileImage }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Account created successfully!");
+        navigate("/login");
+      } else {
+        alert(data.message || "Signup failed!");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Something went wrong!");
+    }
   };
 
-  // Inline styles for blinking effect
   const blinkingStyle = {
     animation: "blink 1s infinite",
-    border: "4px solidrgba(255, 106, 250, 0.24)", // Blue 900
+    border: "4px solid rgba(255, 106, 250, 0.24)",
   };
 
   const styles = `
     @keyframes blink {
-            0%, 100% {
-              box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.8);
-            }
-            50% {
-              box-shadow: 0 0 20px 5px rgba(59, 130, 246, 1);
-            }
-          }
-  `; 
+      0%, 100% {
+        box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.8);
+      }
+      50% {
+        box-shadow: 0 0 20px 5px rgba(59, 130, 246, 1);
+      }
+    }
+  `;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
@@ -64,108 +87,98 @@ const SignupForm = () => {
         className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 dark:bg-gray-800 dark:border-gray-700 border border-gray-300"
         style={blinkingStyle}
       >
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-4">
+        <h1 className="text-2xl font-bold text-center mb-4">
           Create an account
         </h1>
+
         <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* Profile Picture Upload */}
           <div>
-            <label
-              htmlFor="profile-picture"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label className="block mb-2 text-sm font-medium">
               Upload Profile Picture
             </label>
             <input
               type="file"
-              id="profile-picture"
               accept="image/*"
               onChange={handleImageUpload}
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="w-full text-sm border p-2 rounded"
               required
             />
             {profileImage && (
-              <div className="mt-4 flex justify-center">
-                <img
-                  src={profileImage}
-                  alt="Uploaded Preview"
-                  className="w-24 h-24 rounded-full object-cover border border-gray-300"
-                />
-              </div>
+              <img
+                src={profileImage}
+                alt="Preview"
+                className="w-24 h-24 mt-2 rounded-full object-cover border"
+              />
             )}
           </div>
+
+          {/* Name Input */}
           <div>
-            <label
-              htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Your Name
-            </label>
+            <label className="block mb-2 text-sm font-medium">Your Name</label>
             <input
               type="text"
               id="name"
-              placeholder="John Doe"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={userData.name}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
               required
             />
           </div>
+
+          {/* Email Input */}
           <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Your Email
-            </label>
+            <label className="block mb-2 text-sm font-medium">Your Email</label>
             <input
               type="email"
               id="email"
-              placeholder="name@company.com"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={userData.email}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
               required
             />
           </div>
+
+          {/* Password Input */}
           <div>
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Password
-            </label>
+            <label className="block mb-2 text-sm font-medium">Password</label>
             <input
               type="password"
               id="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={handlePasswordChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={userData.password}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
               required
             />
           </div>
+
+          {/* Confirm Password Input */}
           <div>
-            <label
-              htmlFor="confirm-password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label className="block mb-2 text-sm font-medium">
               Confirm Password
             </label>
             <input
               type="password"
-              id="confirm-password"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              id="confirmPassword"
+              value={userData.confirmPassword}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
               required
             />
             {passwordError && (
               <p className="text-sm text-red-600 mt-1">{passwordError}</p>
             )}
           </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            className="w-full bg-blue-600 text-white py-2 rounded"
           >
             Create an account
           </button>
+
+          {/* Continue with Google */}
           <button
             type="button"
             className="w-full text-gray-900 bg-white border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 text-center flex items-center justify-center"
@@ -182,20 +195,26 @@ const SignupForm = () => {
             >
               <path
                 fill="currentColor"
-                d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                d="M488 261.8C488 403.3 391.1 504 248 504 
+                   110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 
+                   166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 
+                   86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 
+                   140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 
+                   3.9 41.4z"
               ></path>
             </svg>
             Continue with Google
           </button>
-          <p className="text-sm font-light text-gray-500">
+
+          {/* Navigate to Login */}
+          <p className="text-sm mt-3">
             Have an account?{" "}
-            <a
-              href="#"
+            <span
               onClick={() => navigate("/login")}
-              className="font-medium text-blue-900 hover:underline"
+              className="text-blue-600 cursor-pointer"
             >
               Login
-            </a>
+            </span>
           </p>
         </form>
       </div>

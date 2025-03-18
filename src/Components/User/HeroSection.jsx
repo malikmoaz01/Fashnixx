@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleShopNowClick = () => {
+    navigate('/products'); 
+  };
+
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
@@ -15,8 +22,8 @@ const HeroSection = () => {
               </p>
             </div>
             <div className="flex space-x-4 mt-6">
-              <a
-                href="#"
+              <button
+                onClick={handleShopNowClick}
                 className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white rounded-lg bg-blue-900 hover:bg-pink-500 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
                 style={{ marginLeft: '10px' }}
               >
@@ -33,7 +40,7 @@ const HeroSection = () => {
                     clipRule="evenodd"
                   ></path>
                 </svg>
-              </a>
+              </button>
               <a
                 href="#"
                 className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-blue-200 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"

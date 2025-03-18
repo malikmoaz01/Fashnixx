@@ -1,14 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null); // Local user state
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  // Check user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    alert("Login successful!");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Login failed!");
+      } else {
+        // Successful login
+        alert(data.message);
+
+        // Save user data to state + localStorage
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Navigate to home/dashboard
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
 
   return (
@@ -16,10 +51,13 @@ const LoginForm = () => {
       <div className="relative w-full max-w-sm sm:max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8 lg:p-10">
         {/* Blinking effect container */}
         <div className="absolute -inset-1 rounded-lg animate-blink border-2 border-blue-700 pointer-events-none"></div>
+
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-4">
           Login
         </h1>
+
         <form className="space-y-4" onSubmit={handleLogin}>
+          {/* Email */}
           <div>
             <label
               htmlFor="email"
@@ -37,6 +75,8 @@ const LoginForm = () => {
               required
             />
           </div>
+
+          {/* Password */}
           <div>
             <label
               htmlFor="password"
@@ -54,12 +94,16 @@ const LoginForm = () => {
               required
             />
           </div>
+
+          {/* Login Button */}
           <button
             type="submit"
             className="w-full text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 text-center"
           >
             Login
           </button>
+
+          {/* Google Button */}
           <button
             type="button"
             className="w-full text-gray-900 bg-white border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 text-center flex items-center justify-center"
@@ -81,18 +125,22 @@ const LoginForm = () => {
             </svg>
             Continue with Google
           </button>
+
+          {/* Link to signup */}
           <p className="text-sm font-light text-gray-500">
             Don't have an account?{" "}
-            <a
-              href=""  
+            <button
+              type="button"
               onClick={() => navigate("/signup")}
               className="font-medium text-blue-700 hover:underline"
             >
               Sign up here
-            </a>
+            </button>
           </p>
         </form>
       </div>
+
+      {/* Styles for blinking effect */}
       <style>
         {`
           @keyframes blink {

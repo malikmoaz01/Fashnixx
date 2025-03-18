@@ -22,6 +22,7 @@ import Navbar from './Components/User/Navbar';
 import CategoriesDropdown from './Components/User/CategoriesDropdown';
 import Signup from './Components/User/SignupForm';
 import Login from './Components/User/LoginForm';
+import ProductList from './Components/User/productlist';
 
 // Categories Images & Routes
 import Shirts from './Components/User/Menswear/Shirts';
@@ -97,6 +98,7 @@ function App() {
                   <Routes>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="product_management" element={<ProductManagement />} />
+                    {/* <Route path="admin_view_products" element={<ProductManagement />} /> */}
                     <Route path="order_management" element={<OrderManagement />} />
                     <Route path="user_management" element={<UserManagement />} />
                     <Route path="sales_reports" element={<SalesReports />} />
@@ -136,6 +138,7 @@ function App() {
                 <Route path='/newArrivals' element={<NewArrival/>}/>
                 <Route path='/sale-products' element={<SaleProducts/>}/>
                 <Route path='/contact' element={<ContactForm/>}/>
+                <Route path='/products' element={<ProductList/>}/>
 
                 {/* Menswear */}
                 <Route path="/menswear/shirts" element={<Shirts />} />

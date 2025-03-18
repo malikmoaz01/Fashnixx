@@ -54,7 +54,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* No Found Message */}
         {searchTerm && !cards.some(card =>
           card.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           card.value.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,7 +61,6 @@ const Dashboard = () => {
           <p className="text-center text-[#F9FAFB] mt-4">No Found</p>
         )}
 
-        {/* Additional Section */}
         <div className="mt-10">
           <h3 className="text-2xl font-bold text-[#F9FAFB] mb-4">Recent Activity</h3>
           <div className="bg-[#374151] rounded-lg shadow-md p-6">
