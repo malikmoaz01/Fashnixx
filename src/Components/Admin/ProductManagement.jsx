@@ -5,9 +5,6 @@ const categoriesData = {
   Shoes: [
     "Men's Shoes",
     "Women's Shoes",
-    "Sports Shoes",
-    "Casual Shoes",
-    "Formal Shoes"
   ],
   Clothing: [
     "Men's Clothing",
@@ -43,6 +40,22 @@ const subCategoriesData = {
     "Kurtis",
     "Ethnic Wear"
   ],
+  "Men's Shoes" : [
+    "Dress Shoes",
+    "Casual Shoes",
+    "Slipers",
+    "Boots",
+    "Sneakers",
+    "Sandals",
+  ],
+  "Women's Shoes": [
+    "Heels",
+    "Flats",
+    "Sneakers",
+    "Sandals",
+    "Boots",
+    "Casual Shoes"
+  ],
   "Kid's Clothing": [
     "Dresses",
     "Tops",
@@ -75,9 +88,6 @@ const clothingSizes = ["Standard", "X", "XL", "2XL", "3XL", "4XL", "5XL"];
 const shoeSizes = {
   "Men's Shoes": [39, 40, 41, 42, 43, 44, 45],
   "Women's Shoes": [36, 37, 38, 39, 40, 41, 42],
-  "Sports Shoes": [39, 40, 41, 42, 43, 44, 45],
-  "Casual Shoes": [39, 40, 41, 42, 43, 44, 45],
-  "Formal Shoes": [39, 40, 41, 42, 43, 44, 45]
 };
 
 const ProductManagement = () => {

@@ -1,124 +1,36 @@
 import React, { useState, useEffect } from "react";
-import womenDressImg from "../../assets/Sneakers.jpg"; // Your image
-import CasioWatch from '../../assets/Sales/Casio-Watch.jpg'
-import CoupleSuit from '../../assets/Sales/Couple-Suit.jpg'
-import GoldenWomenCasual from '../../assets/Sales/Golden-Shirt.png'
-import RolexWatch from '../../assets/Sales/Rolex-Watch.jpg'
-import ShalwarQameez from '../../assets/Sales/Shalwar-Qameez.jpg'
-import PinkSunglasses from '../../assets/Sales/Sunglasses.jpg'
-import WomenKurti from '../../assets/Sales/Women-Kurti.jpg'
-import WomenMakeupBrushSet from '../../assets/Sales/Women-Makeup-Brush-Set.jpeg'
-
+import { useNavigate } from 'react-router-dom';
 
 const SaleComponent = () => {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 21,
     minutes: 23,
     seconds: 12,
   });
+  const [saleProducts, setSaleProducts] = useState([]);
 
-  const products = [
-    {
-      id: 1,
-      image: womenDressImg,
-      name: "Sneakers",
-      price: 5000,
-      originalPrice: 7500,
-      discount: "33% OFF",
-      material: "Synthetic",
-      rating: 4.8,
-      reviews: 42,
-    },
-    {
-      id: 2,
-      image: CasioWatch,
-      name: "Casio Watch",
-      price: 7000,
-      originalPrice: 9000,
-      discount: "22% OFF",
-      material: "Stainless Steel",
-      rating: 4.6,
-      reviews: 30,
-    },
-    {
-      id: 3,
-      image: CoupleSuit,
-      name: "Couple Suit",
-      price: 15000,
-      originalPrice: 20000,
-      discount: "25% OFF",
-      material: "Cotton Blend",
-      rating: 4.7,
-      reviews: 25,
-    },
-    {
-      id: 4,
-      image: GoldenWomenCasual,
-      name: "Golden Shirt",
-      price: 3000,
-      originalPrice: 4500,
-      discount: "33% OFF",
-      material: "Silk",
-      rating: 4.5,
-      reviews: 18,
-    },
-    {
-      id: 5,
-      image: RolexWatch,
-      name: "Rolex Watch",
-      price: 25000,
-      originalPrice: 30000,
-      discount: "16% OFF",
-      material: "Gold-Plated",
-      rating: 4.9,
-      reviews: 50,
-    },
-    {
-      id: 6,
-      image: ShalwarQameez,
-      name: "Shalwar Qameez",
-      price: 4000,
-      originalPrice: 5000,
-      discount: "20% OFF",
-      material: "Lawn",
-      rating: 4.4,
-      reviews: 20,
-    },
-    {
-      id: 7,
-      image: PinkSunglasses,
-      name: "Pink Sunglasses",
-      price: 1500,
-      originalPrice: 2500,
-      discount: "40% OFF",
-      material: "Polycarbonate",
-      rating: 4.6,
-      reviews: 28,
-    },
-    {
-      id: 8,
-      image: WomenKurti,
-      name: "Women Kurti",
-      price: 2000,
-      originalPrice: 3000,
-      discount: "33% OFF",
-      material: "Cotton",
-      rating: 4.5,
-      reviews: 35,
-    },
-    {
-      id: 9,
-      image: WomenMakeupBrushSet,
-      name: "Makeup Brush Set",
-      price: 1800,
-      originalPrice: 2500,
-      discount: "28% OFF",
-      material: "Synthetic Fibers",
-      rating: 4.7,
-      reviews: 40,
-    },
-  ];
+  // Fetch products from API
+  useEffect(() => {
+    const fetchSaleProducts = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/products');
+        const data = await res.json();
+        
+        // Filter products that are on sale (assuming products with discountPrice are on sale)
+        // You can modify this filter based on your actual data structure
+        const onSaleProducts = data.filter(product => product.discountPrice);
+        
+        // Take first 9 sale products or all if less than 9
+        setSaleProducts(onSaleProducts.slice(0, 9));
+      } catch (err) {
+        console.error('Failed to fetch sale products:', err);
+      }
+    };
+
+    fetchSaleProducts();
+  }, []);
 
   // Countdown Timer Logic
   useEffect(() => {
@@ -148,15 +60,26 @@ const SaleComponent = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle navigate to product detail - same as in ProductList
+  const handleViewDetails = (productId) => {
+    navigate(`/products/${productId}`);
+  };
+
+  // Calculate discount percentage
+  const calculateDiscount = (originalPrice, discountPrice) => {
+    const discount = ((originalPrice - discountPrice) / originalPrice) * 100;
+    return `${Math.round(discount)}% OFF`;
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-4xl font-semibold text-blue-700 animate-blink">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div className="text-4xl font-semibold text-blue-700 animate-blink mb-4 md:mb-0">
           🔥 Flash Sale
         </div>
 
         {/* Countdown Timer */}
-        <div className="text-center text-pink-500 text-2xl font-poppins font-extrabold shadow-lg rounded-xl p-6 bg-white">
+        <div className="text-center text-pink-500 text-2xl font-extrabold shadow-lg rounded-xl p-4 bg-white">
           <h1>{timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s</h1>
         </div>
       </div>
@@ -178,59 +101,151 @@ const SaleComponent = () => {
         .animate-blink {
           animation: blink 1s linear infinite;
         }
+        
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-256px * ${saleProducts.length / 2}));
+          }
+        }
+
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+          display: flex;
+        }
       `}</style>
 
-      {/* Infinite Product Carousel */}
-      <div className="overflow-hidden my-4">
-        <div className="flex animate-marquee">
-          {products.map((product, index) => (
-            <div
-              key={product.id + index}
-              className="flex-none w-64 bg-white p-4 rounded-lg shadow-md mx-2 mb-4 transition-all ease-in-out"
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-56 object-cover rounded-lg"
-              />
-              <div className="text-center mt-2">
-                <h3 className="text-xl font-bold">{product.name}</h3>
-                <p className="text-gray-500">{product.material}</p>
-                <div className="flex justify-center items-center space-x-2">
-                  <span className="text-xl text-red-600 font-semibold">
-                    Rs {product.price}
-                  </span>
-                  <span className="text-sm line-through text-gray-400">
-                    Rs {product.originalPrice}
-                  </span>
-                  <span className="text-sm text-3xl text-green-500">{product.discount}</span>
+      {/* Product Carousel */}
+      <div className="overflow-hidden my-8">
+        {saleProducts.length > 0 ? (
+          <div className="flex animate-marquee">
+            {/* First copy of products for infinite scroll effect */}
+            {saleProducts.map((product) => (
+              <div
+                key={`first-${product._id}`}
+                className="flex-none w-64 bg-white p-4 rounded-lg shadow-md mx-2 mb-4 transition-all hover:shadow-lg"
+              >
+                <div className="relative w-full h-56 bg-gray-100 overflow-hidden group">
+                  <img
+                    src={product.images && product.images[0]}
+                    alt={product.name}
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* Quick view overlay - same as ProductList */}
+                  <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button
+                      onClick={() => handleViewDetails(product._id)}
+                      className="bg-white text-pink-600 py-2 px-4 rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                    >
+                      Quick View
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-center items-center my-2">
-                  <span className="text-yellow-400">{product.rating} ★</span>
-                  <span className="text-gray-500 ml-2">({product.reviews} reviews)</span>
+                
+                <div className="text-center mt-2">
+                  <h3 className="text-xl font-bold">{product.name}</h3>
+                  <p className="text-gray-500">{product.category}</p>
+                  <div className="flex justify-center items-center space-x-2">
+                    <span className="text-xl text-red-600 font-semibold">
+                      Rs {product.discountPrice}
+                    </span>
+                    <span className="text-sm line-through text-gray-400">
+                      Rs {product.price}
+                    </span>
+                    <span className="text-sm text-green-500">
+                      {calculateDiscount(product.price, product.discountPrice)}
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center my-2">
+                    <span className="text-yellow-400">{product.rating} ★</span>
+                    <span className="text-gray-500 ml-2">({product.reviews || 0} reviews)</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Add to Cart Button */}
-              <div className="flex justify-center my-4">
-                <a href="/product-overview">
-                  <button className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
+                {/* View Product Button */}
+                <div className="flex justify-center my-3">
+                  <button 
+                    onClick={() => handleViewDetails(product._id)}
+                    className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                  >
                     View Product
                   </button>
-                </a>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+            
+            {/* Second copy of products for infinite scroll effect */}
+            {saleProducts.map((product) => (
+              <div
+                key={`second-${product._id}`}
+                className="flex-none w-64 bg-white p-4 rounded-lg shadow-md mx-2 mb-4 transition-all hover:shadow-lg"
+              >
+                <div className="relative w-full h-56 bg-gray-100 overflow-hidden group">
+                  <img
+                    src={product.images && product.images[0]}
+                    alt={product.name}
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* Quick view overlay */}
+                  <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button
+                      onClick={() => handleViewDetails(product._id)}
+                      className="bg-white text-pink-600 py-2 px-4 rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                    >
+                      Quick View
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="text-center mt-2">
+                  <h3 className="text-xl font-bold">{product.name}</h3>
+                  <p className="text-gray-500">{product.category}</p>
+                  <div className="flex justify-center items-center space-x-2">
+                    <span className="text-xl text-red-600 font-semibold">
+                      Rs {product.discountPrice}
+                    </span>
+                    <span className="text-sm line-through text-gray-400">
+                      Rs {product.price}
+                    </span>
+                    <span className="text-sm text-green-500">
+                      {calculateDiscount(product.price, product.discountPrice)}
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center my-2">
+                    <span className="text-yellow-400">{product.rating} ★</span>
+                    <span className="text-gray-500 ml-2">({product.reviews || 0} reviews)</span>
+                  </div>
+                </div>
+
+                {/* View Product Button */}
+                <div className="flex justify-center my-3">
+                  <button 
+                    onClick={() => handleViewDetails(product._id)}
+                    className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                  >
+                    View Product
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading sale products...</p>
+          </div>
+        )}
       </div>
 
       {/* View All Flash Sale Products Button */}
       <div className="flex justify-center my-6">
-        <a href="/sale-products" >
-        <button className="bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 transition">
+        <button 
+          onClick={() => navigate('/products')}
+          className="bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 transition"
+        >
           View All Flash Sale Products
         </button>
-        </a>
       </div>
     </div>
   );

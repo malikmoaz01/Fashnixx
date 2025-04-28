@@ -19,6 +19,14 @@ const ContactForm = () => {
     try {
       await axios.post("http://localhost:5000/send-email", formData);
       alert("Message sent successfully!");
+      // Reset form fields after successful submission
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
     } catch (error) {
       alert("Failed to send message.");
     }
@@ -51,6 +59,7 @@ const ContactForm = () => {
               name="firstName"
               placeholder="First name"
               className="w-full md:w-1/2 p-3 bg-gray-800 border border-gray-700 rounded text-white"
+              value={formData.firstName}
               onChange={handleChange}
             />
             <input
@@ -58,6 +67,7 @@ const ContactForm = () => {
               name="lastName"
               placeholder="Last name"
               className="w-full md:w-1/2 p-3 bg-gray-800 border border-gray-700 rounded text-white"
+              value={formData.lastName}
               onChange={handleChange}
             />
           </div>
@@ -66,6 +76,7 @@ const ContactForm = () => {
             name="email"
             placeholder="Email"
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
+            value={formData.email}
             onChange={handleChange}
           />
           <input
@@ -73,12 +84,14 @@ const ContactForm = () => {
             name="phone"
             placeholder="Phone number"
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white"
+            value={formData.phone}
             onChange={handleChange}
           />
           <textarea
             name="message"
             placeholder="Message"
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded text-white h-32"
+            value={formData.message}
             onChange={handleChange}
           />
           <button

@@ -26,21 +26,19 @@ const Footer = () => {
 		'+923357134173',
 	];
 
-	// Categories section
 	const categories = [
-		{ label: "Men's T-Shirts", path: '/menswear/tshirts' },
-		{ label: "Women's Dresses", path: '/womenswear/dresses' },
-		{ label: "Kids Wear", path: '/kidswear/dresses' },
-		{ label: "Men's Jackets", path: '/menswear/jackets' },
-		{ label: "Women's Tops", path: '/womenswear/tops' },
-		{ label: "Accessories", path: '/accessories/bags' },
+		{ label: "Men's Wear", path: '/products/menswear' },
+		{ label: "Women's Wear", path: '/products/womenswear' },
+		{ label: "Kids Wear", path: '/products/kidswear' },
+		{ label: "Men's Shoes", path: '/products/menshoes' },
+		{ label: "Women's Shoes", path: '/products/womenshoes' },
+		{ label: "Accessories", path: '/products/accessories' },
 	];
 
 	return (
 		<div style={BannerImg} className="text-white">
 			<div className="container py-10">
 				<div className="grid md:grid-cols-3 items-center justify-center">
-					{/* Logo and Description */}
 					<div className="sm:ml-10 ml-4 sm:mr-0 mr-3 flex flex-col justify-center">
 						<img
 							src={Image}
@@ -55,7 +53,6 @@ const Footer = () => {
 						</p>
 					</div>
 
-					{/* Categories Section */}
 					<div className="py-14 sm:ml-14 ml-4">
 						<h1 className="sm:text-3xl text-2xl font-bold text-left mb-3">
 							Shop By Categories
@@ -73,11 +70,9 @@ const Footer = () => {
 						</div>
 					</div>
 
-					{/* Contact and Social Links */}
 					<div className="sm:ml-0 ml-[-200px] flex flex-col items-center gap-4">
-						{/* Social Links */}
 						<div className="flex items-center gap-3 mb-6 justify-center">
-							<a href="http://www.whatsapp.com/03055865381" className="text-gray-300 hover:text-white">
+							<a href="https://wa.me/923055865381" className="text-gray-300 hover:text-white">
 								<FaWhatsapp className="text-3xl" />
 							</a>
 							<a href="http://www.facebook.com/mlkmoaz01" className="text-gray-300 hover:text-white">
@@ -91,7 +86,6 @@ const Footer = () => {
 							</a>
 						</div>
 
-						{/* Contact Numbers and Location */}
 						<div className="flex flex-col gap-3 text-center">
 							<p className="flex items-center gap-3 mb-3 justify-center text-xl text-gray-200">
 								<FaLocationArrow />

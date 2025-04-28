@@ -10,6 +10,7 @@ const SignupForm = () => {
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleImageUpload = (event) => {
@@ -54,169 +55,179 @@ const SignupForm = () => {
         alert("Account created successfully!");
         navigate("/login");
       } else {
-        alert(data.message || "Signup failed!");
+        setErrorMessage(data.message || "Signup failed!");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      alert("Something went wrong!");
+      setErrorMessage("Something went wrong! Please try again later.");
     }
   };
-
-  const blinkingStyle = {
-    animation: "blink 1s infinite",
-    border: "4px solid rgba(255, 106, 250, 0.24)",
-  };
-
-  const styles = `
-    @keyframes blink {
-      0%, 100% {
-        box-shadow: 0 0 10px 2px rgba(59, 130, 246, 0.8);
-      }
-      50% {
-        box-shadow: 0 0 20px 5px rgba(59, 130, 246, 1);
-      }
-    }
-  `;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      {/* Style for blinking animation */}
-      <style>{styles}</style>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-800 to-pink-900 p-4 sm:p-6 lg:p-10">
+      <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl p-8 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-pink-500 to-pink-500"></div>
+        <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 opacity-20 blur-xl"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full bg-gradient-to-tr from-blue-400 to-blue-500 opacity-20 blur-xl"></div>
 
-      <div
-        className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 dark:bg-gray-800 dark:border-gray-700 border border-gray-300"
-        style={blinkingStyle}
-      >
-        <h1 className="text-2xl font-bold text-center mb-4">
-          Create an account
+        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 text-center mb-6">
+          Join Us Today
         </h1>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Error message */}
+        {errorMessage && (
+          <div className="mb-6 p-3 text-red-700 bg-red-100 rounded-lg border-l-4 border-red-500">
+            {errorMessage}
+          </div>
+        )}
+
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Profile Picture Upload */}
           <div>
-            <label className="block mb-2 text-sm font-medium">
-              Upload Profile Picture
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Profile Picture
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="w-full text-sm border p-2 rounded"
-              required
-            />
-            {profileImage && (
-              <img
-                src={profileImage}
-                alt="Preview"
-                className="w-24 h-24 mt-2 rounded-full object-cover border"
-              />
-            )}
+            <div className="flex flex-col items-center">
+              {profileImage ? (
+                <div className="mb-3 relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                  <img
+                    src={profileImage}
+                    alt="Profile Preview"
+                    className="relative w-24 h-24 rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-24 h-24 mb-3 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center shadow-inner">
+                  <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path>
+                  </svg>
+                </div>
+              )}
+              <div className="relative w-full">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0 file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Name Input */}
-          <div>
-            <label className="block mb-2 text-sm font-medium">Your Name</label>
+          <div className="relative">
             <input
               type="text"
               id="name"
               value={userData.name}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600 py-2 px-1"
+              placeholder="Name"
               required
             />
+            <label 
+              htmlFor="name" 
+              className="absolute left-0 -top-3.5 text-sm text-gray-600 transition-all 
+              peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
+              peer-focus:-top-3.5 peer-focus:text-blue-600 peer-focus:text-sm"
+            >
+              Your Name
+            </label>
           </div>
 
           {/* Email Input */}
-          <div>
-            <label className="block mb-2 text-sm font-medium">Your Email</label>
+          <div className="relative">
             <input
               type="email"
               id="email"
               value={userData.email}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600 py-2 px-1"
+              placeholder="Email"
               required
             />
+            <label 
+              htmlFor="email" 
+              className="absolute left-0 -top-3.5 text-sm text-gray-600 transition-all 
+              peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
+              peer-focus:-top-3.5 peer-focus:text-blue-600 peer-focus:text-sm"
+            >
+              Your Email
+            </label>
           </div>
 
           {/* Password Input */}
-          <div>
-            <label className="block mb-2 text-sm font-medium">Password</label>
+          <div className="relative">
             <input
               type="password"
               id="password"
               value={userData.password}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600 py-2 px-1"
+              placeholder="Password"
               required
             />
+            <label 
+              htmlFor="password" 
+              className="absolute left-0 -top-3.5 text-sm text-gray-600 transition-all 
+              peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
+              peer-focus:-top-3.5 peer-focus:text-blue-600 peer-focus:text-sm"
+            >
+              Password
+            </label>
           </div>
 
           {/* Confirm Password Input */}
-          <div>
-            <label className="block mb-2 text-sm font-medium">
-              Confirm Password
-            </label>
+          <div className="relative">
             <input
               type="password"
               id="confirmPassword"
               value={userData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600 py-2 px-1"
+              placeholder="Confirm Password"
               required
             />
+            <label 
+              htmlFor="confirmPassword" 
+              className="absolute left-0 -top-3.5 text-sm text-gray-600 transition-all 
+              peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
+              peer-focus:-top-3.5 peer-focus:text-blue-600 peer-focus:text-sm"
+            >
+              Confirm Password
+            </label>
             {passwordError && (
               <p className="text-sm text-red-600 mt-1">{passwordError}</p>
             )}
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded"
-          >
-            Create an account
-          </button>
-
-          {/* Continue with Google */}
-          <button
-            type="button"
-            className="w-full text-gray-900 bg-white border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 text-center flex items-center justify-center"
-          >
-            <svg
-              className="mr-2 -ml-1 w-4 h-4"
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fab"
-              data-icon="google"
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 488 512"
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-bold rounded-lg group"
             >
-              <path
-                fill="currentColor"
-                d="M488 261.8C488 403.3 391.1 504 248 504 
-                   110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 
-                   166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 
-                   86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 
-                   140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 
-                   3.9 41.4z"
-              ></path>
-            </svg>
-            Continue with Google
-          </button>
-
-          {/* Navigate to Login */}
-          <p className="text-sm mt-3">
-            Have an account?{" "}
-            <span
-              onClick={() => navigate("/login")}
-              className="text-blue-600 cursor-pointer"
-            >
-              Login
-            </span>
-          </p>
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-600 via-pink-600 to-blue-800"></span>
+              <span className="absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-pink-500 opacity-30 group-hover:rotate-90 ease"></span>
+              <span className="relative text-white">Create Account</span>
+            </button>
+          </div>
         </form>
+
+        {/* Already have an account link */}
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            Sign in
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+import ScrollToTop from './Components/User/ScrollToTop';
 
 // Admin components
 import HeaderAdmin from './Components/Admin/AdminHeader';
@@ -15,37 +18,21 @@ import ProductRecommendation from './Components/Admin/ProductRecommendation';
 import ShippingManagement from './Components/Admin/ShippingManagement';
 import Settings from './Components/Admin/Settings';
 import AdminLogin from './Components/Admin/AdminLogin';
+import AdminComplain from './Components/Admin/AdminComplains';
+import OrderConfirmation from './Components/User/Delivery/OrderConfirmation';
 
-// User components
-import Header from './Components/User/Header';
-import Navbar from './Components/User/Navbar';
-import CategoriesDropdown from './Components/User/CategoriesDropdown';
+import Headnav from './Components/User/HeadNav';
 import Signup from './Components/User/SignupForm';
 import Login from './Components/User/LoginForm';
 import ProductList from './Components/User/productlist';
-
-// Categories Images & Routes
-import Shirts from './Components/User/Menswear/Shirts';
-import TShirts from './Components/User/Menswear/TShirt';
-import Jeans from './Components/User/Menswear/Jeans';
-import Jackets from './Components/User/Menswear/Jackets';
-import Dresses from './Components/User/Womenswear/Dresses';
-import Tops from './Components/User/Womenswear/Tops';
-import Skirts from './Components/User/Womenswear/Skirts';
-import Sarees from './Components/User/Womenswear/Sarees';
-import KidsTShirts from './Components/User/Kidswear/TShirts';
-import Shorts from './Components/User/Kidswear/Shorts';
-import KidsDresses from './Components/User/Kidswear/Dresses';
-import Nightwear from './Components/User/Kidswear/Nightwear';
-import Bags from './Components/User/Accessories/Bags';
-import Shoes from './Components/User/Accessories/Shoes';
-import Watches from './Components/User/Accessories/Watches';
-import Jewelry from './Components/User/Accessories/Jewelry';
+import ProductDetail from './Components/User/ProductDetail';
+import Wishlist from './Components/User/Wishlist';
+import ComplaintChatbot from './Components/User/ComplaintChatbot';
 import About from './Components/User/About';
 import Footer from './Components/User/Footer';
 import Home from './Components/User/Home';
-import Cart from './Components/User/Cart'
-import Checkout from './Components/User/Checkout'
+import Cart from './Components/User/Cart';
+import Checkout from './Components/User/Checkout';
 import BelowFooter from './Components/User/BelowFooter';
 import UserProfile from './Components/User/UserProfile';
 import OrderHistory from './Components/User/OrderHistory';
@@ -54,7 +41,18 @@ import ProductOverview from './Components/User/ProductOverview';
 import NewArrival from './Components/User/NewArrival';
 import SaleProducts from './Components/User/SaleProducts';
 import ContactForm from './Components/User/Contact';
+
+// Categories routes
+import MenSwear from './Components/User/Categories/Menswearr';
+import WomenSwear from './Components/User/Categories/Womenswear';
+import KidsSwear from './Components/User/Categories/Kidswear';
+import Accessories from './Components/User/Categories/Accessories';
+import Menshoes from './Components/User/Categories/Menshoes';
+import Womenshoes from './Components/User/Categories/Womenshoes';
+
 function App() {
+  const GOOGLE_CLIENT_ID = "123922841654-i1jujo69c525uji333d5q2v8rksq5est.apps.googleusercontent.com";
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -79,98 +77,82 @@ function App() {
     setDropdownOpen(false);
   };
 
-  const ProtectedRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/admin/login" />;
-  };
-
   return (
-    <Router>
-      <Routes>
-        {/* Admin routes */}
-        <Route
-          path="/admin/*"
-          element={
-            isAuthenticated ? (
-              <div className="flex">
-                <Sidebar />
-                <div className="flex flex-1 flex-col">
-                  <HeaderAdmin onLogout={handleLogout} />
-                  <Routes>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="product_management" element={<ProductManagement />} />
-                    {/* <Route path="admin_view_products" element={<ProductManagement />} /> */}
-                    <Route path="order_management" element={<OrderManagement />} />
-                    <Route path="user_management" element={<UserManagement />} />
-                    <Route path="sales_reports" element={<SalesReports />} />
-                    <Route path="discount_management" element={<DiscountManagement />} />
-                    <Route path="product_recommendation" element={<ProductRecommendation />} />
-                    <Route path="shipping_management" element={<ShippingManagement />} />
-                    <Route path="settings" element={<Settings />} />
-                  </Routes>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          {/* Admin routes */}
+          <Route
+            path="/admin/*"
+            element={
+              isAuthenticated ? (
+                <div className="flex">
+                  <Sidebar />
+                  <div className="flex flex-1 flex-col">
+                    <HeaderAdmin onLogout={handleLogout} />
+                    <Routes>
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="product_management" element={<ProductManagement />} />
+                      <Route path="order_management" element={<OrderManagement />} />
+                      <Route path="user_management" element={<UserManagement />} />
+                      <Route path="sales_reports" element={<SalesReports />} />
+                      <Route path="discount_management" element={<DiscountManagement />} />
+                      <Route path="product_recommendation" element={<ProductRecommendation />} />
+                      <Route path="shipping_management" element={<ShippingManagement />} />
+                      <Route path="admin_complain" element={<AdminComplain />} />
+                      <Route path="settings" element={<Settings />} />
+                    </Routes>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <Navigate to="/admin/login" />
-            )
-          }
-        />
-        <Route path="/admin/login" element={<AdminLogin onLogin={handleLogin} />} />
+              ) : (
+                <Navigate to="/admin/login" />
+              )
+            }
+          />
+          <Route path="/admin/login" element={<AdminLogin onLogin={handleLogin} />} />
 
-        {/* User routes */}
-        <Route
-          path="/*"
-          element={
-            <>
-              <Header />
-              <Navbar onToggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
-              {dropdownOpen && <CategoriesDropdown onNavigate={handleNavigate} />}
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about-us" element={<About />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-                <Route path='/cart' element={<Cart />}/>
-                <Route path='/checkout' element={<Checkout/>}/>
-                <Route path='/account'  element={<UserProfile/>}/>
-                <Route path='/order-history' element={<OrderHistory/>}/>
-                <Route path='/payment-methods' element={<PaymentMethod/>}/>
-                <Route path='/product-overview' element={<ProductOverview/>}/>
-                <Route path='/newArrivals' element={<NewArrival/>}/>
-                <Route path='/sale-products' element={<SaleProducts/>}/>
-                <Route path='/contact' element={<ContactForm/>}/>
-                <Route path='/products' element={<ProductList/>}/>
-
-                {/* Menswear */}
-                <Route path="/menswear/shirts" element={<Shirts />} />
-                <Route path="/menswear/tshirts" element={<TShirts />} />
-                <Route path="/menswear/jeans" element={<Jeans />} />
-                <Route path="/menswear/jackets" element={<Jackets />} />
-
-                {/* Womenswear */}
-                <Route path="/womenswear/dresses" element={<Dresses />} />
-                <Route path="/womenswear/tops" element={<Tops />} />
-                <Route path="/womenswear/skirts" element={<Skirts />} />
-                <Route path="/womenswear/sarees" element={<Sarees />} />
-
-                {/* Kidswear */}
-                <Route path="/kidswear/tshirts" element={<KidsTShirts />} />
-                <Route path="/kidswear/shorts" element={<Shorts />} />
-                <Route path="/kidswear/dresses" element={<KidsDresses />} />
-                <Route path="/kidswear/nightwear" element={<Nightwear />} />
-
-                {/* Accessories */}
-                <Route path="/accessories/bags" element={<Bags />} />
-                <Route path="/accessories/shoes" element={<Shoes />} />
-                <Route path="/accessories/watches" element={<Watches />} />
-                <Route path="/accessories/jewelry" element={<Jewelry />} />
-              </Routes>
-              <Footer />
-              <BelowFooter/>
-            </>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* User routes */}
+          <Route
+            path="/*"
+            element={
+              <>
+                <Headnav/>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about-us" element={<About />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path='/cart' element={<Cart />} />
+                  <Route path='/wishlist' element={<Wishlist />} />
+                  <Route path='/checkout' element={<Checkout />} />
+                  <Route path='/account' element={<UserProfile />} />
+                  <Route path='/order-history' element={<OrderHistory />} />
+                  <Route path='/account/payment-methods' element={<PaymentMethod />} />
+                  <Route path='/product-overview' element={<ProductOverview />} />
+                  <Route path='/newArrivals' element={<NewArrival />} />
+                  <Route path='/sale-products' element={<SaleProducts />} />
+                  <Route path='/contact' element={<ContactForm />} />
+                  <Route path='/products' element={<ProductList />} />
+                  <Route path="/products/:productId" element={<ProductDetail />} />
+                  <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+                  <Route path="/orders/:orderId" element={<OrderConfirmation />} />
+                  <Route path='/products/menswear' element={<MenSwear />} />
+                  <Route path='/products/womenswear' element={<WomenSwear />} />
+                  <Route path='/products/kidswear' element={<KidsSwear />} />
+                  <Route path='/products/accessories' element={<Accessories />} />
+                  <Route path='/products/menshoes' element={<Menshoes />} />
+                  <Route path='/products/womenshoes' element={<Womenshoes />} />
+                </Routes>
+                <Footer />
+                <BelowFooter />
+                <ComplaintChatbot />
+              </>
+            }
+          />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

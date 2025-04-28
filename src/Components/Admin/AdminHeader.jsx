@@ -1,100 +1,117 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import searchLogo from '../../assets/search.png';
-import alertLogo from '../../assets/alert.png';
-import messageLogo from '../../assets/message.png';
-import captureLogo from '../../assets/camera.png';
+import React, { useState, useEffect } from 'react';
+import { Bell, LogOut, ShoppingBag } from 'lucide-react';
 
-const Header = ({ onLogout }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [activeResult, setActiveResult] = useState(null);  
-  const navigate = useNavigate();
+const Header = ({ onLogout, notifications = [], onNotificationClear }) => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(3);
 
-  const pages = [
-    { name: 'Dashboard', path: '/admin/dashboard' },
-    { name: 'Product Management', path: '/admin/product_management' },
-    { name: 'Order Management', path: '/admin/order_management' },
-    { name: 'User Management', path: '/admin/user_management' },
-    { name: 'Sales Reports', path: '/admin/sales_reports' },
-    { name: 'Discount Management', path: '/admin/discount_management' },
-    { name: 'Product Recommendation', path: '/admin/product_recommendation' },
-    { name: 'Shipping Management', path: '/admin/shipping_management' },
-    { name: 'Settings', path: '/admin/settings' },
-  ];
+  // Update notification count whenever notifications array changes
+  useEffect(() => {
+    setNotificationCount(notifications.length);
+  }, [notifications]);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    if (e.target.value === '') {
-      setSearchResults([]);
-      return;
+  // Function to handle notification click
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  // Function to clear a notification
+  const clearNotification = (id) => {
+    if (onNotificationClear) {
+      onNotificationClear(id);
     }
-    const filteredResults = pages.filter(page =>
-      page.name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setSearchResults(filteredResults);
   };
 
-  const handleSearchClick = (path) => {
-    setSearchTerm('');
-    setSearchResults([]);
-    navigate(path);
-  };
-
-  const handleMouseEnter = (index) => {
-    setActiveResult(index); 
-  };
-
-  const handleMouseLeave = () => {
-    setActiveResult(null); 
-  };
+  // Close notifications when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (showNotifications && !event.target.closest('.notification-container')) {
+        setShowNotifications(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showNotifications]);
 
   return (
-    <div className='header h-1/7 w-full flex justify-between bg-gradient-to-b from-[#1F2937] to-[#4B5563] sticky top-0'>
-      <div className="left m-5 p-1 md:h-10 md:w-72 flex items-center gap-2 border border-solid border-[#374151] rounded-lg">
-        <img src={searchLogo} alt="Search Icon" className='md:w-6 md:h-6 w-3 h-3'/>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder='Type to Search...'
-          className='md:h-8 flex-1 md:text-base text-[#9CA3AF] font-light outline-none bg-transparent' 
-        />
+    <div className="header w-full flex items-center justify-between p-4 bg-gradient-to-b from-[#1F2937] to-[#4B5563] shadow-md sticky top-0 z-10">
+      {/* Left side - Title */}
+      <div className="flex-1 ml-10 md:ml-4">
+        <h1 className="text-lg md:text-2xl font-semibold text-white">Admin Dashboard</h1>
       </div>
-      {searchResults.length > 0 && (
-        <div className="search-results absolute bg-white w-full border border-t-0 border-[#374151] rounded-b-lg"
-             style={{
-               top: '50px', 
-               zIndex: 10 
-             }}>
-          <ul>
-            {searchResults.map((result, index) => (
-              <li
-                key={index}
-                onClick={() => handleSearchClick(result.path)}
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave} 
-                className={`p-2 cursor-pointer hover:bg-[#FF7849] ${
-                  activeResult === index ? 'bg-[#FF7849] text-[#F9FAFB]' : ''
-                }`} 
-              >
-                {result.name}
-              </li>
-            ))}
-          </ul>
+      
+      {/* Right side - Icons and logout */}
+      <div className="flex items-center space-x-4 md:space-x-6">
+        {/* Notification bell */}
+        <div className="relative notification-container">
+          <Bell 
+            className="w-6 h-6 text-white cursor-pointer hover:text-gray-200" 
+            onClick={handleNotificationClick}
+          />
+          {notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-[#FF7849] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {notificationCount}
+            </span>
+          )}
+          
+          {/* Notification dropdown */}
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-64 md:w-80 bg-white rounded-md shadow-lg py-1 z-50">
+              <div className="py-2 px-3 bg-gray-100 border-b border-gray-200">
+                <h3 className="text-sm font-medium">Notifications</h3>
+              </div>
+              
+              {notifications.length === 0 ? (
+                <div className="py-4 px-3 text-center text-gray-500 text-sm">
+                  No new notifications
+                </div>
+              ) : (
+                <div className="max-h-60 overflow-y-auto">
+                  {notifications.map((notification) => (
+                    <div 
+                      key={notification.id} 
+                      className="py-2 px-3 hover:bg-gray-100 border-b border-gray-100 flex justify-between items-start"
+                    >
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-800">{notification.title}</p>
+                        <p className="text-xs text-gray-500">{notification.message}</p>
+                        <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                      </div>
+                      <button 
+                        onClick={() => clearNotification(notification.id)}
+                        className="text-xs text-gray-400 hover:text-gray-600"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {notifications.length > 0 && (
+                <div className="py-2 px-3 text-center border-t border-gray-100">
+                  <button 
+                    onClick={() => onNotificationClear && onNotificationClear('all')}
+                    className="text-xs text-blue-500 hover:text-blue-700"
+                  >
+                    Clear all notifications
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
-      <div className="right hidden md:flex m-5 h-[5svh] gap-6 items-center">
-        <img src={alertLogo} alt="Alert Logo" className='w-6 h-6' />
-        <img src={messageLogo} alt="Message Logo" className='w-6 h-6' />
-        <img src={captureLogo} alt="Capture Logo" className='w-6 h-6' />
-      </div>
-      <div className='m-5 flex gap-2'>
+        
+
+        {/* Logout button */}
         <button 
-          className="bg-transparent hover:bg-[#FF7849] text-[#F9FAFB] font-semibold py-2 px-4 border border-[#FF7849] rounded-full"
+          className="flex items-center gap-2 bg-transparent hover:bg-[#FF7849] text-white font-medium py-2 px-3 md:px-4 border border-[#FF7849] rounded-full transition-colors duration-200"
           onClick={onLogout}
         >
-          Log Out
+          <span className="hidden md:inline">Log Out</span>
+          <LogOut className="w-5 h-5" />
         </button>
       </div>
     </div>

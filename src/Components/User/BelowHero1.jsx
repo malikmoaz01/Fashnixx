@@ -5,23 +5,27 @@ import MoneyBack from '../../assets/Money.png'
 
 const BelowHero1 = () => {
   return (
-    <div className="bg-white py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div className="flex flex-col items-center text-center p-4 border rounded-lg shadow-md">
-          <img src={FreeDelivery} alt="Free Delivery" className="w-12 h-12 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">FREE AND FAST DELIVERY</h3>
-          <p className="text-sm text-gray-600">Free delivery for all orders over Rs 1300</p>
+    <div className="bg-gradient-to-r from-blue-200 to-pink-300 py-4 px-2">
+      <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-between gap-1">
+        
+        <div className="flex flex-col items-center text-center p-2 border border-blue-300 rounded-md shadow-sm bg-white flex-1 mb-1 sm:mb-0">
+          <img src={FreeDelivery} alt="Free Delivery" className="w-6 h-6 mb-1" />
+          <h3 className="text-xs font-semibold text-blue-700">FREE DELIVERY</h3>
+          <p className="text-xs text-gray-600">Orders over Rs 1300</p>
         </div>
-        <div className="flex flex-col items-center text-center p-4 border rounded-lg shadow-md">
-          <img src={CustomerSupport} alt="Customer Service" className="w-12 h-12 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">24/7 CUSTOMER SERVICE</h3>
-          <p className="text-sm text-gray-600">Friendly 24/7 customer support</p>
+        
+        <div className="flex flex-col items-center text-center p-2 border border-pink-300 rounded-md shadow-sm bg-white flex-1 mb-1 sm:mb-0">
+          <img src={CustomerSupport} alt="Customer Service" className="w-6 h-6 mb-1" />
+          <h3 className="text-xs font-semibold text-pink-700">24/7 SUPPORT</h3>
+          <p className="text-xs text-gray-600">Always available</p>
         </div>
-        <div className="flex flex-col items-center text-center p-4 border rounded-lg shadow-md">
-          <img src={MoneyBack} alt="Money Back Guarantee" className="w-16 h-12 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">MONEY BACK GUARANTEE</h3>
-          <p className="text-sm text-gray-600">We return money within 30 days</p>
+        
+        <div className="flex flex-col items-center text-center p-2 border border-blue-300 rounded-md shadow-sm bg-white flex-1">
+          <img src={MoneyBack} alt="Money Back Guarantee" className="w-6 h-6 mb-1" />
+          <h3 className="text-xs font-semibold text-blue-700">MONEY BACK</h3>
+          <p className="text-xs text-gray-600">30 days guarantee</p>
         </div>
+        
       </div>
     </div>
   );
