@@ -36,6 +36,7 @@ import Checkout from './Components/User/Checkout';
 import BelowFooter from './Components/User/BelowFooter';
 import UserProfile from './Components/User/UserProfile';
 import OrderHistory from './Components/User/OrderHistory';
+import TrackOrder from './Components/User/TrackOrder';
 import PaymentMethod from './Components/User/PaymentMethods';
 import ProductOverview from './Components/User/ProductOverview';
 import NewArrival from './Components/User/NewArrival';
@@ -128,6 +129,7 @@ function App() {
                   <Route path='/checkout' element={<Checkout />} />
                   <Route path='/account' element={<UserProfile />} />
                   <Route path='/order-history' element={<OrderHistory />} />
+                  <Route path='/trackorder' element={<TrackOrder />} />
                   <Route path='/account/payment-methods' element={<PaymentMethod />} />
                   <Route path='/product-overview' element={<ProductOverview />} />
                   <Route path='/newArrivals' element={<NewArrival />} />

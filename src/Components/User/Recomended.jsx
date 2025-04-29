@@ -11,7 +11,7 @@ const Recommended = () => {
     const fetchRecommendedProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch('https://fashnix-backend.onrender.com/api/products');
         const allProducts = await res.json();
         const recommendedProducts = getRecommendations(allProducts);
         setRecommendedProducts(recommendedProducts);

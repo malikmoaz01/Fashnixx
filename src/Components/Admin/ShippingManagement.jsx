@@ -27,7 +27,7 @@ const ShippingManagement = () => {
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
         }
@@ -107,7 +107,7 @@ const ShippingManagement = () => {
     
     try {
       setUpdating(true);
-      const response = await fetch(`http://localhost:5000/api/orders/${orderToTrack}/tracking`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/orders/${orderToTrack}/tracking`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

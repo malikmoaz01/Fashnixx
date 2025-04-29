@@ -36,7 +36,7 @@ const DiscountManagement = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5000/api/discounts');
+      const response = await fetch('https://fashnix-backend.onrender.com/api/discounts');
       
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -65,7 +65,7 @@ const DiscountManagement = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:5000/api/discounts/search?query=${encodeURIComponent(searchTerm)}`);
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/discounts/search?query=${encodeURIComponent(searchTerm)}`);
       
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -96,7 +96,7 @@ const DiscountManagement = () => {
     
     try {
       const method = isEditing ? 'PUT' : 'POST';
-      const url = isEditing ? `http://localhost:5000/api/discounts/${editId}` : 'http://localhost:5000/api/discounts';
+      const url = isEditing ? `https://fashnix-backend.onrender.com/api/discounts/${editId}` : 'https://fashnix-backend.onrender.com/api/discounts';
       
       const response = await fetch(url, {
         method,
@@ -143,7 +143,7 @@ const DiscountManagement = () => {
     setError(null);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/discounts/${id}`);
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/discounts/${id}`);
       
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -184,7 +184,7 @@ const DiscountManagement = () => {
       setError(null);
       
       try {
-        const response = await fetch(`http://localhost:5000/api/discounts/${id}`, {
+        const response = await fetch(`https://fashnix-backend.onrender.com/api/discounts/${id}`, {
           method: 'DELETE'
         });
         
@@ -210,7 +210,7 @@ const DiscountManagement = () => {
     setError(null);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/discounts/${id}/status`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/discounts/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -237,7 +237,7 @@ const DiscountManagement = () => {
     setError(null);
     
     try {
-      const response = await fetch('http://localhost:5000/api/discounts/validate', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/discounts/validate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -17,7 +17,7 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/send-email", formData);
+      await axios.post("https://fashnix-backend.onrender.com/send-email", formData);
       alert("Message sent successfully!");
       // Reset form fields after successful submission
       setFormData({

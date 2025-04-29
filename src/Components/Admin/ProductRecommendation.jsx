@@ -20,7 +20,7 @@ const ProductRecommendationDashboard = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch('https://fashnix-backend.onrender.com/api/products');
         if (!res.ok) {
           throw new Error(`API responded with status: ${res.status}`);
         }

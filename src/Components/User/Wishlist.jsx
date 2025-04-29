@@ -20,7 +20,7 @@ const Wishlist = () => {
         for (const item of storedWishlist) {
           if (!productDetails[item.productId]) {
             try {
-              const res = await fetch(`http://localhost:5000/api/products/${item.productId}`);
+              const res = await fetch(`https://fashnix-backend.onrender.com/api/products/${item.productId}`);
               if (res.ok) {
                 const data = await res.json();
                 productDetails[item.productId] = data;

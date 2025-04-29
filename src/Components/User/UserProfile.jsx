@@ -46,15 +46,15 @@ const UserProfileManagement = () => {
                 setLoading(false);
                 return;
             }
-            
+
             try {
                 // Use the endpoint from userRoutes.js
-                const response = await axios.get(`http://localhost:5000/api/users/${userData.id}/profile`, {
+                const response = await axios.get(`https://fashnix-backend.onrender.com/api/users/${userData.id}/profile`, {
                     headers: {
                         Authorization: `Bearer ${userData.token}`
                     }
                 });
-                
+
                 // Transform the data if needed to match your component state
                 const profileData = {
                     name: response.data.name || "",
@@ -65,7 +65,7 @@ const UserProfileManagement = () => {
                     city: response.data.city || "",
                     profileImage: response.data.profileImage || ""
                 };
-                
+
                 setProfile(profileData);
                 setTempData(profileData);
                 setLoading(false);
@@ -75,12 +75,12 @@ const UserProfileManagement = () => {
                 setLoading(false);
             }
         };
-        
+
         fetchUserProfile();
     }, []);
 
     const handleEdit = (field) => setEditField(field);
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setTempData((prev) => ({ ...prev, [name]: value }));
@@ -102,8 +102,8 @@ const UserProfileManagement = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                `http://localhost:5000/api/users/${userData.id}/upload-profile-image`, 
-                formData, 
+                `https://fashnix-backend.onrender.com/api/users/${userData.id}/upload-profile-image`,
+                formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -111,7 +111,7 @@ const UserProfileManagement = () => {
                     }
                 }
             );
-            
+
             setTempData(prev => ({
                 ...prev,
                 profileImage: response.data.profileImage
@@ -133,7 +133,7 @@ const UserProfileManagement = () => {
 
         try {
             setLoading(true);
-            
+
             if (editField === "profile") {
                 const profileData = {
                     name: tempData.name,
@@ -141,9 +141,9 @@ const UserProfileManagement = () => {
                     phone: tempData.phone,
                     profileImage: tempData.profileImage
                 };
-                
+
                 await axios.put(
-                    `http://localhost:5000/api/users/${userData.id}/profile`, 
+                    `https://fashnix-backend.onrender.com/api/users/${userData.id}/profile`,
                     profileData,
                     {
                         headers: {
@@ -157,9 +157,9 @@ const UserProfileManagement = () => {
                     street: tempData.street,
                     city: tempData.city
                 };
-                
+
                 await axios.put(
-                    `http://localhost:5000/api/users/${userData.id}/shipping-address`, 
+                    `https://fashnix-backend.onrender.com/api/users/${userData.id}/shipping-address`,
                     addressData,
                     {
                         headers: {
@@ -168,7 +168,7 @@ const UserProfileManagement = () => {
                     }
                 );
             }
-            
+
             setProfile({ ...tempData });
             setEditField(null);
             setLoading(false);
@@ -202,7 +202,7 @@ const UserProfileManagement = () => {
                         </svg>
                     </div>
                     <p className="text-red-600 mb-6 font-medium">{error}</p>
-                    <button 
+                    <button
                         className="bg-gradient-to-r from-blue-600 to-pink-500 text-white py-3 px-8 rounded-full hover:shadow-lg transition-all duration-300"
                         onClick={() => navigate('/login')}
                     >
@@ -236,15 +236,14 @@ const UserProfileManagement = () => {
 
             {/* Sidebar */}
             <aside
-                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg fixed md:relative h-full z-50 transform transition-transform duration-300 ${
-                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                } md:translate-x-0 bg-white bg-opacity-90 backdrop-blur-sm`}
+                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg fixed md:relative h-full z-50 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:translate-x-0 bg-white bg-opacity-90 backdrop-blur-sm`}
             >
                 <div className="sticky top-0 flex items-center space-x-4 border-b border-pink-200 pb-4 mb-6">
                     <div className="relative">
-                        <img 
-                            src={profile.profileImage || MinePic} 
-                            alt="User Avatar" 
+                        <img
+                            src={profile.profileImage || MinePic}
+                            alt="User Avatar"
                             className="w-16 h-16 rounded-full object-cover border-4 border-pink-300"
                         />
                         <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
@@ -276,6 +275,15 @@ const UserProfileManagement = () => {
                                     <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
                                 </svg>
                                 <span>My Order History</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/trackorder" className="flex items-center py-3 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-100 hover:to-pink-100 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-pink-600" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                                </svg>
+                                <span className="font-medium">Track Order</span>
                             </Link>
                         </li>
                     </ul>
@@ -313,10 +321,10 @@ const UserProfileManagement = () => {
                             <div className="space-y-4">
                                 <div className="mb-4 flex justify-center">
                                     <div className="relative">
-                                        <img 
-                                            src={tempData.profileImage || MinePic} 
-                                            alt="Profile Avatar" 
-                                            className="w-32 h-32 rounded-full object-cover border-4 border-pink-300" 
+                                        <img
+                                            src={tempData.profileImage || MinePic}
+                                            alt="Profile Avatar"
+                                            className="w-32 h-32 rounded-full object-cover border-4 border-pink-300"
                                         />
                                         <label htmlFor="profileImage" className="absolute bottom-0 right-0 bg-gradient-to-r from-blue-600 to-pink-500 text-white p-2 rounded-full cursor-pointer hover:shadow-lg">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -324,12 +332,12 @@ const UserProfileManagement = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </label>
-                                        <input 
-                                            id="profileImage" 
-                                            type="file" 
-                                            accept="image/*" 
-                                            onChange={handleFileChange} 
-                                            className="hidden" 
+                                        <input
+                                            id="profileImage"
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="hidden"
                                         />
                                     </div>
                                 </div>
@@ -339,42 +347,42 @@ const UserProfileManagement = () => {
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             Full Name
                                         </label>
-                                        <input 
-                                            type="text" 
-                                            name="name" 
-                                            value={tempData.name} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={tempData.name}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             Email Address
                                         </label>
-                                        <input 
-                                            type="email" 
-                                            name="email" 
-                                            value={tempData.email} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={tempData.email}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             Phone Number
                                         </label>
-                                        <input 
-                                            type="text" 
-                                            name="phone" 
-                                            value={tempData.phone} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                        <input
+                                            type="text"
+                                            name="phone"
+                                            value={tempData.phone}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="flex justify-center space-x-3 mt-6">
-                                    <button 
+                                    <button
                                         className="py-2 px-6 bg-gradient-to-r from-blue-600 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center"
                                         onClick={handleUpdate}
                                         disabled={loading}
@@ -396,7 +404,7 @@ const UserProfileManagement = () => {
                                             </>
                                         )}
                                     </button>
-                                    <button 
+                                    <button
                                         className="py-2 px-6 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition-all duration-300"
                                         onClick={() => setEditField(null)}
                                     >
@@ -408,10 +416,10 @@ const UserProfileManagement = () => {
                             <div className="md:flex items-start">
                                 <div className="md:w-1/3 flex justify-center mb-4 md:mb-0">
                                     <div className="relative">
-                                        <img 
-                                            src={profile.profileImage || MinePic} 
-                                            alt="Profile Avatar" 
-                                            className="w-32 h-32 rounded-full object-cover border-4 border-pink-300" 
+                                        <img
+                                            src={profile.profileImage || MinePic}
+                                            alt="Profile Avatar"
+                                            className="w-32 h-32 rounded-full object-cover border-4 border-pink-300"
                                         />
                                     </div>
                                 </div>
@@ -430,7 +438,7 @@ const UserProfileManagement = () => {
                                             <p className="font-medium text-blue-800">{profile.phone || "Not provided"}</p>
                                         </div>
                                     </div>
-                                    <button 
+                                    <button
                                         className="mt-4 py-2 px-6 bg-gradient-to-r from-blue-600 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center mx-auto md:mx-0"
                                         onClick={() => handleEdit("profile")}
                                     >
@@ -461,42 +469,42 @@ const UserProfileManagement = () => {
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             Address
                                         </label>
-                                        <input 
-                                            type="text" 
-                                            name="address" 
-                                            value={tempData.address} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" 
+                                        <input
+                                            type="text"
+                                            name="address"
+                                            value={tempData.address}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             Street
                                         </label>
-                                        <input 
-                                            type="text" 
-                                            name="street" 
-                                            value={tempData.street} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" 
+                                        <input
+                                            type="text"
+                                            name="street"
+                                            value={tempData.street}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 text-sm font-bold mb-2">
                                             City
                                         </label>
-                                        <input 
-                                            type="text" 
-                                            name="city" 
-                                            value={tempData.city} 
-                                            onChange={handleInputChange} 
-                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" 
+                                        <input
+                                            type="text"
+                                            name="city"
+                                            value={tempData.city}
+                                            onChange={handleInputChange}
+                                            className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="flex justify-center space-x-3 mt-6">
-                                    <button 
+                                    <button
                                         className="py-2 px-6 bg-gradient-to-r from-blue-600 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center"
                                         onClick={handleUpdate}
                                         disabled={loading}
@@ -518,7 +526,7 @@ const UserProfileManagement = () => {
                                             </>
                                         )}
                                     </button>
-                                    <button 
+                                    <button
                                         className="py-2 px-6 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition-all duration-300"
                                         onClick={() => setEditField(null)}
                                     >
@@ -540,7 +548,7 @@ const UserProfileManagement = () => {
                                                 <p className="font-medium text-pink-800">{profile.street || "Not provided"}</p>
                                             </div>
                                             <div>
-                                            <p className="font-medium text-blue-800">{profile.city || "Not provided"}</p>
+                                                <p className="font-medium text-blue-800">{profile.city || "Not provided"}</p>
                                             </div>
                                         </div>
                                     ) : (
@@ -549,7 +557,7 @@ const UserProfileManagement = () => {
                                         </div>
                                     )}
                                 </div>
-                                <button 
+                                <button
                                     className="mt-4 py-2 px-6 bg-gradient-to-r from-blue-600 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center mx-auto md:mx-0"
                                     onClick={() => handleEdit("address")}
                                 >

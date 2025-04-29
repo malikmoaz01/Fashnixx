@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import html2pdf from 'html2pdf.js';
 
-const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
+const OrderConfirmation = ({ orderId, customerEmail, userId = "guest" }) => {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
     const fetchOrder = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/orders/${orderId}`);
+        const response = await fetch(`https://fashnix-backend.onrender.com/api/orders/${orderId}`);
         
         if (response.ok) {
           const data = await response.json();
@@ -116,10 +116,14 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
       })),
       subtotal: localOrder.subtotal || localOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
       deliveryCost: localOrder.deliveryCost || 0,
+      discount: localOrder.discount || 0, // Make sure discount is included
+      discountInfo: localOrder.discountInfo || null, // Store coupon info
       total: localOrder.total || (
-        localOrder.subtotal || 
-        localOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-      ) + (localOrder.deliveryCost || 0),
+        (localOrder.subtotal || 
+        localOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)) -
+        (localOrder.discount || 0) + 
+        (localOrder.deliveryCost || 0)
+      ),
       customer: {
         firstName: localOrder.customer?.firstName || '',
         lastName: localOrder.customer?.lastName || '',
@@ -158,7 +162,7 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
         upsert: true // This tells the backend to update if exists, insert if not
       };
       
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
@@ -184,7 +188,7 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
       // If it's a duplicate key error, try to fetch the existing order instead
       if (err.message && err.message.includes("duplicate key error")) {
         try {
-          const fetchResponse = await fetch(`http://localhost:5000/api/orders/${orderData.orderId}`);
+          const fetchResponse = await fetch(`https://fashnix-backend.onrender.com/api/orders/${orderData.orderId}`);
           if (fetchResponse.ok) {
             const existingOrder = await fetchResponse.json();
             console.log("Retrieved existing order:", existingOrder);
@@ -201,7 +205,7 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
 
   const sendConfirmationEmail = async (orderId, email) => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders/send-confirmation', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders/send-confirmation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId, email })
@@ -324,6 +328,15 @@ const OrderConfirmation = ({ orderId, customerEmail , userId = "guest" }) => {
             <span className="text-gray-600">Subtotal</span>
             <span>{formatCurrency(order.subtotal)}</span>
           </div>
+          
+          {/* Show discount if applied */}
+          {order.discount > 0 && (
+            <div className="flex justify-between mb-2 text-green-700">
+              <span>Discount{order.discountInfo ? ` (${order.discountInfo.name})` : ''}</span>
+              <span>-{formatCurrency(order.discount)}</span>
+            </div>
+          )}
+          
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Delivery</span>
             <span>{formatCurrency(order.deliveryCost)}</span>

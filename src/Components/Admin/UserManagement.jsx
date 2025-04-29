@@ -9,7 +9,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
+        const response = await fetch("https://fashnix-backend.onrender.com/api/users");
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
         }
@@ -42,7 +42,7 @@ const UserManagement = () => {
     }
     
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}/block`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/users/${userId}/block`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isBlocked: !isBlocked })

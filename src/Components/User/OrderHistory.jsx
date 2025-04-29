@@ -30,7 +30,17 @@ const OrderHistory = () => {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-    // Get status badge color - Updated with blue-pink theme
+    const getPaymentStatusFromOrderStatus = (orderStatus) => {
+        switch (orderStatus.toLowerCase()) {
+            case 'delivered':
+                return 'received';
+            case 'cancelled':
+                return 'cancelled';
+            default:
+                return 'pending';
+        }
+    };
+
     const getStatusBadgeColor = (status) => {
         switch (status.toLowerCase()) {
             case 'pending':
@@ -59,14 +69,14 @@ const OrderHistory = () => {
                 setLoading(false);
                 return;
             }
-            
+
             try {
-                const response = await axios.get(`http://localhost:5000/api/orders/user/email/${userData.email}`, {
+                const response = await axios.get(`https://fashnix-backend.onrender.com/api/orders/user/email/${userData.email}`, {
                     headers: {
                         Authorization: `Bearer ${userData.token}`
                     }
                 });
-                
+
                 setOrders(response.data);
                 setLoading(false);
             } catch (error) {
@@ -75,7 +85,7 @@ const OrderHistory = () => {
                 setLoading(false);
             }
         };
-        
+
         fetchUserOrders();
     }, []);
 
@@ -121,15 +131,14 @@ const OrderHistory = () => {
 
             {/* Sidebar */}
             <aside
-                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg fixed md:relative h-full z-50 transform transition-transform duration-300 ${
-                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                } md:translate-x-0 bg-white bg-opacity-90 backdrop-blur-sm`}
+                className={`bg-white w-64 md:w-1/4 p-4 shadow-lg fixed md:relative h-full z-50 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:translate-x-0 bg-white bg-opacity-90 backdrop-blur-sm`}
             >
                 <div className="flex items-center space-x-4 border-b border-pink-200 pb-4 mb-6">
                     <div className="relative">
-                        <img 
-                            src={getUserAuth()?.profileImage || MinePic} 
-                            alt="User Avatar" 
+                        <img
+                            src={getUserAuth()?.profileImage || MinePic}
+                            alt="User Avatar"
                             className="w-16 h-16 rounded-full object-cover border-4 border-pink-300"
                         />
                         <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
@@ -161,6 +170,15 @@ const OrderHistory = () => {
                                     <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
                                 </svg>
                                 <span className="font-medium">My Order History</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/trackorder" className="flex items-center py-3 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-100 hover:to-pink-100 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-pink-600" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                                </svg>
+                                <span className="font-medium">Track Order</span>
                             </Link>
                         </li>
 
@@ -232,7 +250,7 @@ const OrderHistory = () => {
                                             </span>
                                         </div>
                                         <div className="mt-4 md:mt-0 flex items-center">
-                                            <button 
+                                            <button
                                                 className="py-2 px-6 bg-gradient-to-r from-blue-600 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center"
                                                 onClick={() => viewOrderDetails(order)}
                                             >
@@ -255,7 +273,7 @@ const OrderHistory = () => {
                             <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-pink-200">
                                 <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-pink-500 text-white p-4 rounded-t-xl flex justify-between items-center">
                                     <h2 className="text-xl font-bold">Order Details #{selectedOrder.orderId}</h2>
-                                    <button 
+                                    <button
                                         onClick={closeOrderDetails}
                                         className="text-white hover:text-pink-200 bg-white bg-opacity-20 rounded-full p-1"
                                     >
@@ -264,7 +282,7 @@ const OrderHistory = () => {
                                         </svg>
                                     </button>
                                 </div>
-                                
+
                                 <div className="p-6">
                                     <div className="grid md:grid-cols-2 gap-6 mt-2">
                                         {/* Order Info */}
@@ -279,7 +297,7 @@ const OrderHistory = () => {
                                                 <span className="font-medium w-32">Date:</span> {formatDate(selectedOrder.createdAt)}
                                             </p>
                                             <p className="mb-2 flex items-center">
-                                                <span className="font-medium w-32">Status:</span> 
+                                                <span className="font-medium w-32">Status:</span>
                                                 <span className={`ml-2 inline-block px-3 py-1 rounded-full text-sm font-semibold ${getStatusBadgeColor(selectedOrder.status)}`}>
                                                     {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
                                                 </span>
@@ -300,7 +318,7 @@ const OrderHistory = () => {
                                                 </p>
                                             )}
                                         </div>
-                                        
+
                                         {/* Shipping Address */}
                                         <div className="bg-pink-50 p-4 rounded-lg border border-pink-200">
                                             <h3 className="font-bold text-lg mb-3 text-pink-800 flex items-center">
@@ -321,7 +339,7 @@ const OrderHistory = () => {
                                             <p className="mb-1">{selectedOrder.customer.address?.country}</p>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Order Items */}
                                     <div className="mt-6 bg-white p-4 rounded-lg border border-gray-200">
                                         <h3 className="font-bold text-lg mb-4 text-blue-800 flex items-center">
@@ -379,7 +397,7 @@ const OrderHistory = () => {
                                             </table>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Payment Information */}
                                     <div className="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
                                         <h3 className="font-bold text-lg mb-3 text-blue-800 flex items-center">
@@ -390,23 +408,30 @@ const OrderHistory = () => {
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <p className="flex items-center">
-                                                <span className="font-medium w-32">Payment Method:</span> 
+                                                <span className="font-medium w-32">Payment Method:</span>
                                                 <span className="px-3 py-1 bg-white rounded-full text-blue-800 border border-blue-300">
-                                                    {selectedOrder.payment?.method === 'cod' 
-                                                        ? 'Cash on Delivery' 
+                                                    {selectedOrder.payment?.method === 'cod'
+                                                        ? 'Cash on Delivery'
                                                         : 'Credit Card'}
                                                 </span>
                                             </p>
+
                                             <p className="flex items-center">
-                                                <span className="font-medium w-32">Payment Status:</span> 
-                                                <span className="px-3 py-1 bg-white rounded-full text-pink-800 border border-pink-300">
-                                                    {selectedOrder.payment?.status.charAt(0).toUpperCase() + 
-                                                    selectedOrder.payment?.status.slice(1)}
-                                                    </span>
+                                                <span className="font-medium w-32">Payment Status:</span>
+                                                {(() => {
+                                                    const derivedPaymentStatus = getPaymentStatusFromOrderStatus(selectedOrder.status);
+                                                    const displayStatus = derivedPaymentStatus || selectedOrder.payment?.status || 'pending';
+
+                                                    return (
+                                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusBadgeColor(displayStatus)}`}>
+                                                            {displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
+                                                        </span>
+                                                    );
+                                                })()}
                                             </p>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Status History */}
                                     {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 && (
                                         <div className="mt-6 bg-pink-50 p-4 rounded-lg border border-pink-200">
@@ -430,7 +455,7 @@ const OrderHistory = () => {
                                             </ul>
                                         </div>
                                     )}
-                                    
+
                                     {/* Action Buttons */}
                                     <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
                                         <button
@@ -439,14 +464,14 @@ const OrderHistory = () => {
                                         >
                                             Close
                                         </button>
-                                        {selectedOrder.status === "delivered" && (
+                                        {/* {selectedOrder.status === "delivered" && (
                                             <button className="bg-gradient-to-r from-blue-600 to-pink-500 text-white py-2 px-6 rounded-full hover:shadow-lg transition-all duration-300 flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                                 Write Review
                                             </button>
-                                        )}
+                                        )} */}
                                     </div>
                                 </div>
                             </div>

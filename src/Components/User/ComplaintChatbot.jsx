@@ -155,7 +155,7 @@ const ComplaintChatbot = () => {
     ]);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/complaints", { 
+      const response = await axios.post("https://fashnix-backend.onrender.com/api/complaints", { 
         message: complainDetails,
         customerName: customerInfo.customerName,
         email: customerInfo.email,

@@ -31,7 +31,7 @@ const Dashboard = () => {
   // Fetch users data
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users");
+      const response = await fetch("https://fashnix-backend.onrender.com/api/users");
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
@@ -53,7 +53,7 @@ const Dashboard = () => {
   // Fetch orders data
   const fetchOrders = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}` 
         }
@@ -104,7 +104,7 @@ const Dashboard = () => {
   // Fetch products data
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://fashnix-backend.onrender.com/api/products');
       
       if (!response.ok) {
         throw new Error('Failed to fetch products');
@@ -140,7 +140,7 @@ const Dashboard = () => {
   // Fetch complaints data
   const fetchComplaints = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/complaints");
+      const response = await fetch("https://fashnix-backend.onrender.com/api/complaints");
       
       if (!response.ok) {
         throw new Error('Failed to fetch complaints');

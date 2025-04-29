@@ -15,7 +15,7 @@ const SaleComponent = () => {
   useEffect(() => {
     const fetchSaleProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch('https://fashnix-backend.onrender.com/api/products');
         const data = await res.json();
         
         // Filter products that are on sale (assuming products with discountPrice are on sale)

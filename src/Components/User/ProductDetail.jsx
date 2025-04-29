@@ -19,7 +19,7 @@ const ProductDetail = () => {
     const fetchProductDetail = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/products/${productId}`);
+        const res = await fetch(`https://fashnix-backend.onrender.com/api/products/${productId}`);
         
         if (!res.ok) {
           throw new Error('Product not found');

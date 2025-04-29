@@ -21,7 +21,7 @@ const NewArrival = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch('https://fashnix-backend.onrender.com/api/products');
         const data = await res.json();
         
         // Filter products to only show those created in the last 6 months

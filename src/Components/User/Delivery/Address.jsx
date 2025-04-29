@@ -24,7 +24,7 @@ const AddressForm = ({ customerData, updateCustomerData, onNext }) => {
       if (!userData || !userData.id) return;
       
       try {
-        const response = await fetch(`http://localhost:5000/api/users/${userData.id}/profile`, {
+        const response = await fetch(`https://fashnix-backend.onrender.com/api/users/${userData.id}/profile`, {
           headers: {
             Authorization: `Bearer ${userData.token}`
           }

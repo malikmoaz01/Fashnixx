@@ -16,7 +16,7 @@ const AdminComplaints = () => {
     try {
       setLoading(true);
       // Updated API endpoint to match our routes
-      const response = await axios.get("http://localhost:5000/api/complaints");
+      const response = await axios.get("https://fashnix-backend.onrender.com/api/complaints");
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {
@@ -28,7 +28,7 @@ const AdminComplaints = () => {
   const updateStatus = async (id, newStatus) => {
     try {
       // Updated API endpoint to match our routes
-      await axios.put(`http://localhost:5000/api/complaints/${id}`, { status: newStatus });
+      await axios.put(`https://fashnix-backend.onrender.com/api/complaints/${id}`, { status: newStatus });
       fetchComplaints(); // Refresh complaints list
     } catch (error) {
       console.error("Error updating complaint status:", error);

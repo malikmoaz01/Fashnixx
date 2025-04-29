@@ -114,7 +114,7 @@ const ProductManagement = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://fashnix-backend.onrender.com/api/products');
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -165,7 +165,7 @@ const ProductManagement = () => {
     try {
       const formattedProduct = formatProductForSubmission(newProduct);
       
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedProduct),
@@ -221,7 +221,7 @@ const ProductManagement = () => {
     try {
       const formattedProduct = formatProductForSubmission(editProduct);
       
-      const response = await fetch(`http://localhost:5000/api/products/${editProduct._id}`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/products/${editProduct._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedProduct),
@@ -246,7 +246,7 @@ const ProductManagement = () => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/products/${productId}`, {
         method: 'DELETE',
       });
 

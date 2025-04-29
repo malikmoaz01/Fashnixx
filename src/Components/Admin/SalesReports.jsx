@@ -32,7 +32,7 @@ const SimpleSalesAnalytics = () => {
   // Fetch products data first to have names
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://fashnix-backend.onrender.com/api/products');
       
       if (!response.ok) {
         throw new Error('Failed to fetch products');
@@ -63,7 +63,7 @@ const SimpleSalesAnalytics = () => {
       // First fetch products to have their names
       const productsData = await fetchProducts();
       
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
         }

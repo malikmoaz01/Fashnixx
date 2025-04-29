@@ -29,7 +29,7 @@ const OrderManagement = () => {
     try {
       setLoading(true);
       // Using the new API endpoint format that matches our backend
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/orders', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}` // Add authentication token
         }
@@ -124,7 +124,7 @@ const OrderManagement = () => {
     try {
       setUpdating(true);
       // Updated endpoint to match our backend
-      const response = await fetch(`http://localhost:5000/api/orders/${orderToUpdate}/status`, {
+      const response = await fetch(`https://fashnix-backend.onrender.com/api/orders/${orderToUpdate}/status`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

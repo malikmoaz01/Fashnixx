@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-const OrderReview = ({ checkoutData, cartItems, products, onPlaceOrder, onBack }) => {
+const OrderReview = ({ checkoutData, cartItems, products, onPlaceOrder, onBack, onApplyCoupon }) => {
+  const [couponCode, setCouponCode] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+
   // Function to format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-PK", {
@@ -8,6 +13,86 @@ const OrderReview = ({ checkoutData, cartItems, products, onPlaceOrder, onBack }
       currency: "PKR",
       minimumFractionDigits: 0,
     }).format(amount);
+  };
+
+  // Function to validate and apply coupon
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setCouponLoading(true);
+    setCouponError(null);
+    
+    try {
+      const response = await fetch('https://fashnix-backend.onrender.com/api/discounts/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: couponCode })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Check if the discount is valid for this order
+      const currentDate = new Date();
+      const startDate = new Date(data.discount.startDate);
+      const endDate = new Date(data.discount.endDate);
+      
+      if (currentDate < startDate || currentDate > endDate) {
+        throw new Error("This coupon is not valid at this time");
+      }
+      
+      if (data.discount.minPurchase && checkoutData.subtotal < data.discount.minPurchase) {
+        throw new Error(`This coupon requires a minimum purchase of ${formatCurrency(data.discount.minPurchase)}`);
+      }
+      
+      // Apply the discount
+      const discountValue = data.discount.discountType === "percentage"
+        ? (checkoutData.subtotal * data.discount.value / 100)
+        : data.discount.value;
+        
+      // Set the applied coupon with all needed information
+      setAppliedCoupon({
+        ...data.discount,
+        appliedValue: discountValue
+      });
+      
+      // Call parent component to update checkout data with discount
+      if (onApplyCoupon) {
+        onApplyCoupon(data.discount, discountValue);
+      }
+      
+    } catch (err) {
+      setCouponError(err.message);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  // Function to remove applied coupon
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    if (onApplyCoupon) {
+      onApplyCoupon(null, 0);
+    }
+  };
+
+  // Calculate the total after discount
+  const calculateTotal = () => {
+    let total = checkoutData.subtotal + checkoutData.delivery.cost;
+    if (appliedCoupon) {
+      total -= appliedCoupon.appliedValue;
+    }
+    return total;
   };
 
   return (
@@ -59,18 +144,73 @@ const OrderReview = ({ checkoutData, cartItems, products, onPlaceOrder, onBack }
             </div>
           </div>
 
+          {/* Coupon Code Section */}
+          <div className="p-4">
+            <h3 className="font-medium text-lg mb-2">Apply Discount Coupon</h3>
+            <div className="flex items-center">
+              <input
+                type="text"
+                placeholder="Enter coupon code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="flex-1 p-2 border rounded-l-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                disabled={appliedCoupon !== null}
+              />
+              {appliedCoupon ? (
+                <button
+                  onClick={handleRemoveCoupon}
+                  className="px-4 py-2 bg-red-500 text-white rounded-r-md hover:bg-red-600 transition"
+                  disabled={couponLoading}
+                >
+                  Remove
+                </button>
+              ) : (
+                <button
+                  onClick={handleApplyCoupon}
+                  className="px-4 py-2 bg-blue-900 text-white rounded-r-md hover:bg-blue-800 transition"
+                  disabled={couponLoading}
+                >
+                  {couponLoading ? "Applying..." : "Apply"}
+                </button>
+              )}
+            </div>
+            
+            {couponError && (
+              <p className="mt-2 text-sm text-red-600">{couponError}</p>
+            )}
+            
+            {appliedCoupon && (
+              <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-700 font-medium">
+                  Coupon "{appliedCoupon.code}" applied: {appliedCoupon.discountType === "percentage" 
+                    ? `${appliedCoupon.value}% off` 
+                    : `${formatCurrency(appliedCoupon.value)} off`}
+                </p>
+              </div>
+            )}
+          </div>
+
           <div className="p-4 bg-gray-50">
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Subtotal</span>
               <span>{formatCurrency(checkoutData.subtotal)}</span>
             </div>
+            
+            {appliedCoupon && (
+              <div className="flex justify-between mb-2 text-green-700">
+                <span>Discount ({appliedCoupon.name})</span>
+                <span>-{formatCurrency(appliedCoupon.appliedValue)}</span>
+              </div>
+            )}
+            
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Delivery</span>
               <span>{formatCurrency(checkoutData.delivery.cost)}</span>
             </div>
+            
             <div className="flex justify-between font-medium text-lg pt-2 border-t border-gray-200 mt-2">
               <span>Total</span>
-              <span>{formatCurrency(checkoutData.orderTotal)}</span>
+              <span>{formatCurrency(calculateTotal())}</span>
             </div>
           </div>
         </div>

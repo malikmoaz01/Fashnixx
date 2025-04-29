@@ -18,7 +18,7 @@ const MenShoes = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch('https://fashnix-backend.onrender.com/api/products');
         const data = await res.json();
         
         // Filter for Men's Shoes products only
